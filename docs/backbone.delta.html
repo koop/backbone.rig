@@ -1,0 +1,333 @@
+<!DOCTYPE html>  <html> <head>   <title>backbone.delta.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               backbone.delta.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p><em>Simple Backbone.View management.</em></p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>Setup</h2>             </td>             <td class="code">               <div class="highlight"><pre><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">root</span><span class="p">,</span> <span class="nx">$</span><span class="p">,</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">Backbone</span><span class="p">,</span> <span class="nx">Delta</span><span class="p">;</span>
+
+  <span class="nx">root</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Create references to required libraries.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">$</span> <span class="o">=</span> <span class="nx">root</span><span class="p">.</span><span class="nx">jQuery</span> <span class="o">||</span> <span class="nx">root</span><span class="p">.</span><span class="nx">Zepto</span> <span class="o">||</span> <span class="nx">root</span><span class="p">.</span><span class="nx">ender</span><span class="p">;</span>
+  <span class="nx">_</span> <span class="o">=</span> <span class="nx">root</span><span class="p">.</span><span class="nx">_</span><span class="p">;</span>
+  <span class="nx">Backbone</span> <span class="o">=</span> <span class="nx">root</span><span class="p">.</span><span class="nx">Backbone</span><span class="p">;</span>
+
+  <span class="nx">Delta</span> <span class="o">=</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Delta</span> <span class="o">=</span> <span class="p">{};</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Set the current version.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Delta</span><span class="p">.</span><span class="nx">VERSION</span> <span class="o">=</span> <span class="s1">&#39;0.1.0&#39;</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h2>Delta.Views</h2>
+
+<p>A subview manager.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Delta</span><span class="p">.</span><span class="nx">Views</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">view</span><span class="p">,</span> <span class="nx">views</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">view</span> <span class="o">=</span> <span class="nx">view</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_views</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span> <span class="nx">views</span> <span class="p">)</span> <span class="o">?</span> <span class="p">{</span> <span class="s1">&#39;&#39;</span><span class="o">:</span> <span class="nx">views</span> <span class="p">}</span> <span class="o">:</span> <span class="nx">views</span> <span class="o">||</span> <span class="p">{};</span>
+  <span class="p">};</span>
+
+  <span class="nx">Delta</span><span class="p">.</span><span class="nx">Views</span><span class="p">.</span><span class="nx">extend</span> <span class="o">=</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">.</span><span class="nx">extend</span><span class="p">;</span>
+
+  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span> <span class="nx">Delta</span><span class="p">.</span><span class="nx">Views</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h3>Fetch all of the subviews</h3>
+
+<p>Returns an array of all subviews.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">all</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">_</span><span class="p">.</span><span class="nx">flatten</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">_views</span> <span class="p">);</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <h3>Get a selector's subviews</h3>
+
+<p>Fetches all subviews that match a given <code>selector</code>.</p>
+
+<p>If no <code>selector</code> is provided, it will grab all subviews attached
+to the view's root.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">selector</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="nx">selector</span> <span class="o">=</span> <span class="nx">selector</span> <span class="o">||</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_views</span><span class="p">[</span> <span class="nx">selector</span> <span class="p">];</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <h3>Get a selector's first subview</h3>
+
+<p>Fetches the first subview that matches a given <code>selector</code>.</p>
+
+<p>If no <code>selector</code> is provided, it will grab the first subview
+attached to the view's root.</p>
+
+<p>Useful when a selector only has one subview at a time.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">first</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">selector</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">views</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">selector</span> <span class="p">);</span>
+      <span class="k">return</span> <span class="nx">views</span> <span class="o">&amp;&amp;</span> <span class="nx">views</span><span class="p">.</span><span class="nx">length</span> <span class="o">?</span> <span class="nx">views</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">:</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <h3>Register subview(s)</h3>
+
+<p>Registers any number of <code>views</code> to a <code>selector</code>.</p>
+
+<p>When no <code>selector</code> is provided, the root selector (the empty string)
+is used. <code>views</code> accepts a <code>Backbone.View</code> instance or an array of
+<code>Backbone.View</code> instances.</p>
+
+<hr />
+
+<p>Accepts an <code>options</code> object, which has a significant effect on the
+resulting behavior.</p>
+
+<p><code>options.silent</code> &ndash; <em>boolean, <code>false</code></em></p>
+
+<blockquote>
+  <p>If <code>options.silent</code> is true, no DOM modifications will be made.</p>
+</blockquote>
+
+<p><code>options.add</code> &ndash; <em>boolean, <code>false</code></em></p>
+
+<blockquote>
+  <p>Use <code>Views.add()</code> as a shortcut for setting <code>options.add</code> to true.</p>
+  
+  <p>By default, the provided <code>views</code> will replace
+  any existing views associated with the selector. If <code>options.add</code>
+  is true, the provided <code>views</code> will be added to the existing views.</p>
+</blockquote>
+
+<p><code>options.at</code> &ndash; <em>integer, <code>undefined</code></em></p>
+
+<blockquote>
+  <p>When adding, to insert <code>views</code> at a specific index, use
+  <code>options.at</code>. By default, <code>views</code> are added to the end of the array.</p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">set</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">selector</span><span class="p">,</span> <span class="nx">views</span><span class="p">,</span> <span class="nx">options</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">existing</span><span class="p">,</span> <span class="nx">next</span><span class="p">;</span>
+
+      <span class="k">if</span> <span class="p">(</span> <span class="o">!</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span><span class="p">(</span> <span class="nx">selector</span> <span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="nx">options</span>  <span class="o">=</span> <span class="nx">views</span><span class="p">;</span>
+        <span class="nx">views</span>    <span class="o">=</span> <span class="nx">selector</span><span class="p">;</span>
+        <span class="nx">selector</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="nx">options</span>  <span class="o">=</span> <span class="nx">options</span> <span class="o">||</span> <span class="p">{};</span>
+      <span class="nx">views</span>    <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span> <span class="nx">views</span> <span class="p">)</span> <span class="o">?</span> <span class="nx">views</span> <span class="o">:</span> <span class="p">[</span> <span class="nx">views</span> <span class="p">];</span>
+      <span class="nx">existing</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">selector</span> <span class="p">);</span>
+      <span class="nx">next</span>     <span class="o">=</span> <span class="nx">views</span><span class="p">;</span>
+
+      <span class="k">if</span> <span class="p">(</span> <span class="nx">existing</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="nx">options</span><span class="p">.</span><span class="nx">add</span> <span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isUndefined</span><span class="p">(</span> <span class="nx">options</span><span class="p">.</span><span class="nx">at</span> <span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="nx">next</span> <span class="o">=</span> <span class="nx">existing</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span> <span class="nx">views</span> <span class="p">);</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nx">next</span> <span class="o">=</span> <span class="nx">existing</span><span class="p">;</span>
+            <span class="nx">next</span><span class="p">.</span><span class="nx">splice</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span> <span class="nx">next</span><span class="p">,</span> <span class="p">[</span> <span class="nx">options</span><span class="p">.</span><span class="nx">at</span><span class="p">,</span> <span class="mi">0</span> <span class="p">].</span><span class="nx">concat</span><span class="p">(</span> <span class="nx">views</span> <span class="p">)</span> <span class="p">);</span>
+          <span class="p">}</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span> <span class="nx">next</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">view</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="nx">view</span><span class="p">.</span><span class="nx">__detach</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+          <span class="p">});</span>
+
+          <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span> <span class="nx">existing</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">view</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span> <span class="nx">view</span><span class="p">.</span><span class="nx">__detach</span> <span class="p">)</span>
+              <span class="nx">view</span><span class="p">.</span><span class="nx">$el</span><span class="p">.</span><span class="nx">detach</span><span class="p">();</span>
+            <span class="k">else</span>
+              <span class="nx">view</span><span class="p">.</span><span class="nx">dispose</span><span class="p">();</span>
+          <span class="p">});</span>
+
+          <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span> <span class="nx">next</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">view</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="k">delete</span> <span class="nx">view</span><span class="p">.</span><span class="nx">__detach</span><span class="p">;</span>
+          <span class="p">});</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_views</span><span class="p">[</span> <span class="nx">selector</span> <span class="p">]</span> <span class="o">=</span> <span class="nx">next</span><span class="p">;</span>
+
+      <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span> <span class="nx">views</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">subview</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">constructor</span> <span class="o">=</span> <span class="nx">subview</span><span class="p">.</span><span class="nx">Views</span> <span class="o">||</span> <span class="nx">Delta</span><span class="p">.</span><span class="nx">Views</span><span class="p">,</span>
+          <span class="nx">subviews</span> <span class="o">=</span> <span class="nx">subview</span><span class="p">.</span><span class="nx">views</span> <span class="o">=</span> <span class="nx">subview</span><span class="p">.</span><span class="nx">views</span> <span class="o">||</span> <span class="k">new</span> <span class="nx">constructor</span><span class="p">(</span> <span class="nx">subview</span> <span class="p">);</span>
+        <span class="nx">subviews</span><span class="p">.</span><span class="nx">parent</span>   <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">view</span><span class="p">;</span>
+        <span class="nx">subviews</span><span class="p">.</span><span class="nx">selector</span> <span class="o">=</span> <span class="nx">selector</span><span class="p">;</span>
+      <span class="p">},</span> <span class="k">this</span> <span class="p">);</span>
+
+      <span class="k">if</span> <span class="p">(</span> <span class="o">!</span> <span class="nx">options</span><span class="p">.</span><span class="nx">silent</span> <span class="p">)</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_attach</span><span class="p">(</span> <span class="nx">selector</span><span class="p">,</span> <span class="nx">views</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span> <span class="nx">ready</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">_isReady</span><span class="p">()</span> <span class="p">},</span> <span class="nx">options</span> <span class="p">)</span> <span class="p">);</span>
+
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <h3>Add subview(s) to existing subviews</h3>
+
+<p>An alias to <code>Views.set()</code>, which defaults <code>options.add</code> to true.</p>
+
+<p>Adds any number of <code>views</code> to a <code>selector</code>.</p>
+
+<p>When no <code>selector</code> is provided, the root selector (the empty string)
+is used. <code>views</code> accepts a <code>Backbone.View</code> instance or an array of
+<code>Backbone.View</code> instances.</p>
+
+<p>Use <code>Views.set()</code> when setting <code>options.add</code> to <code>false</code>.</p>
+
+<p>Accepts an <code>options</code> object. By default, provided <code>views</code> will be
+inserted at the end of the array of existing views. To insert
+<code>views</code> at a specific index, use <code>options.at</code>. If <code>options.silent</code>
+is true, no DOM modifications will be made.</p>
+
+<p>For more information on the <code>options</code> object, see <code>Views.set()</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">add</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">selector</span><span class="p">,</span> <span class="nx">views</span><span class="p">,</span> <span class="nx">options</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span> <span class="o">!</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span><span class="p">(</span> <span class="nx">selector</span> <span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="nx">options</span>  <span class="o">=</span> <span class="nx">views</span><span class="p">;</span>
+        <span class="nx">views</span>    <span class="o">=</span> <span class="nx">selector</span><span class="p">;</span>
+        <span class="nx">selector</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span> <span class="nx">selector</span><span class="p">,</span> <span class="nx">views</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span> <span class="nx">add</span><span class="o">:</span> <span class="kc">true</span> <span class="p">},</span> <span class="nx">options</span> <span class="p">)</span> <span class="p">);</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <h3>Stop tracking subviews</h3>
+
+<p>Stops tracking <code>views</code> registered to a <code>selector</code>. If no <code>views</code> are
+set, then all of the <code>selector</code>'s subviews will be unregistered and
+disposed.</p>
+
+<p>Accepts an <code>options</code> object. If <code>options.silent</code> is set, <code>dispose</code>
+will <em>not</em> be triggered on the unregistered views.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">unset</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">selector</span><span class="p">,</span> <span class="nx">views</span><span class="p">,</span> <span class="nx">options</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">existing</span><span class="p">;</span>
+
+      <span class="k">if</span> <span class="p">(</span> <span class="o">!</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span><span class="p">(</span> <span class="nx">selector</span> <span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="nx">options</span> <span class="o">=</span> <span class="nx">views</span><span class="p">;</span>
+        <span class="nx">views</span> <span class="o">=</span> <span class="nx">selector</span><span class="p">;</span>
+        <span class="nx">selector</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span> <span class="p">(</span> <span class="nx">existing</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">selector</span> <span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="nx">views</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span> <span class="nx">views</span> <span class="p">)</span> <span class="o">?</span> <span class="nx">views</span> <span class="o">:</span> <span class="p">[</span> <span class="nx">views</span> <span class="p">];</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_views</span><span class="p">[</span> <span class="nx">selector</span> <span class="p">]</span> <span class="o">=</span> <span class="nx">views</span><span class="p">.</span><span class="nx">length</span> <span class="o">?</span> <span class="nx">_</span><span class="p">.</span><span class="nx">difference</span><span class="p">(</span> <span class="nx">existing</span><span class="p">,</span> <span class="nx">views</span> <span class="p">)</span> <span class="o">:</span> <span class="p">[];</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span> <span class="p">(</span> <span class="o">!</span> <span class="nx">options</span> <span class="o">||</span> <span class="o">!</span> <span class="nx">options</span><span class="p">.</span><span class="nx">silent</span> <span class="p">)</span>
+        <span class="nx">_</span><span class="p">.</span><span class="nx">invoke</span><span class="p">(</span> <span class="nx">views</span><span class="p">,</span> <span class="s1">&#39;dispose&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">silent</span><span class="o">:</span> <span class="kc">true</span> <span class="p">});</span>
+
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <h3>Detach all subviews</h3>
+
+<p>Detaches all subviews from the DOM.</p>
+
+<p>Helps to preserve all subview events when re-rendering the master
+view. Used in conjunction with <code>Views.render()</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">detach</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">$</span><span class="p">(</span> <span class="nx">_</span><span class="p">.</span><span class="nx">pluck</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">all</span><span class="p">(),</span> <span class="s1">&#39;el&#39;</span> <span class="p">)</span> <span class="p">).</span><span class="nx">detach</span><span class="p">();</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <h3>Render all subviews</h3>
+
+<p>Renders all subviews. Used in conjunction with <code>Views.detach()</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">render</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+          <span class="nx">ready</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">_isReady</span><span class="p">()</span>
+        <span class="p">};</span>
+
+      <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">_views</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">views</span><span class="p">,</span> <span class="nx">selector</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_attach</span><span class="p">(</span> <span class="nx">selector</span><span class="p">,</span> <span class="nx">views</span><span class="p">,</span> <span class="nx">options</span> <span class="p">);</span>
+      <span class="p">},</span> <span class="k">this</span> <span class="p">);</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">rendered</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <h3>Dispose all subviews</h3>
+
+<p>Triggers the <code>dispose()</code> method on all subviews. Detaches the master
+view from its parent. Resets the internals of the views manager.</p>
+
+<p>Accepts an <code>options</code> object. If <code>options.silent</code> is set, <code>unset</code>
+will <em>not</em> be triggered on the master view's parent.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">dispose</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">options</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span> <span class="o">!</span> <span class="nx">options</span> <span class="o">||</span> <span class="o">!</span> <span class="nx">options</span><span class="p">.</span><span class="nx">silent</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">parent</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">parent</span><span class="p">.</span><span class="nx">views</span> <span class="p">)</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">parent</span><span class="p">.</span><span class="nx">views</span><span class="p">.</span><span class="nx">unset</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">selector</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">view</span><span class="p">,</span> <span class="p">{</span> <span class="nx">silent</span><span class="o">:</span> <span class="kc">true</span> <span class="p">});</span>
+        <span class="k">delete</span> <span class="k">this</span><span class="p">.</span><span class="nx">parent</span><span class="p">;</span>
+        <span class="k">delete</span> <span class="k">this</span><span class="p">.</span><span class="nx">selector</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="nx">_</span><span class="p">.</span><span class="nx">invoke</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">all</span><span class="p">(),</span> <span class="s1">&#39;dispose&#39;</span> <span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_views</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <h3>Replace a selector's subviews</h3>
+
+<p>By default, sets the <code>$target</code> selector's html to the subview <code>els</code>.</p>
+
+<p>Can be overridden in subclasses.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">replace</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">$target</span><span class="p">,</span> <span class="nx">els</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="nx">$target</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span> <span class="nx">els</span> <span class="p">);</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <h3>Insert subviews into a selector</h3>
+
+<p>By default, appends the subview <code>els</code> to the end of the <code>$target</code>
+selector. If <code>options.at</code> is set, inserts the subview <code>els</code> at the
+provided index.</p>
+
+<p>Can be overridden in subclasses.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">insert</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">$target</span><span class="p">,</span> <span class="nx">els</span><span class="p">,</span> <span class="nx">options</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">at</span> <span class="o">=</span> <span class="nx">options</span> <span class="o">&amp;&amp;</span> <span class="nx">options</span><span class="p">.</span><span class="nx">at</span><span class="p">,</span>
+        <span class="nx">$children</span><span class="p">;</span>
+
+      <span class="k">if</span> <span class="p">(</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isNumber</span><span class="p">(</span> <span class="nx">at</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">$children</span> <span class="o">=</span> <span class="nx">$target</span><span class="p">.</span><span class="nx">children</span><span class="p">()).</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="nx">at</span> <span class="p">)</span>
+        <span class="nx">$children</span><span class="p">.</span><span class="nx">eq</span><span class="p">(</span> <span class="nx">at</span> <span class="p">).</span><span class="nx">before</span><span class="p">(</span> <span class="nx">els</span> <span class="p">);</span>
+      <span class="k">else</span>
+        <span class="nx">$target</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="nx">els</span> <span class="p">);</span>
+
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <h3>Trigger the ready event</h3>
+
+<p><strong>Only use this method if you know what you're doing.</strong>
+For performance reasons, this method does not check if the view is
+actually attached to the DOM. It's taking your word for it.</p>
+
+<p>Fires the ready event on the current view and all attached subviews.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">ready</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">view</span><span class="p">.</span><span class="nx">trigger</span><span class="p">(</span><span class="s1">&#39;ready&#39;</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>Find all attached subviews, and call ready on them.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nx">_</span><span class="p">.</span><span class="nx">chain</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">all</span><span class="p">()</span> <span class="p">).</span><span class="nx">map</span><span class="p">(</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">view</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">view</span><span class="p">.</span><span class="nx">views</span><span class="p">;</span>
+      <span class="p">}).</span><span class="nx">flatten</span><span class="p">().</span><span class="nx">where</span><span class="p">({</span> <span class="nx">attached</span><span class="o">:</span> <span class="kc">true</span> <span class="p">}).</span><span class="nx">invoke</span><span class="p">(</span><span class="s1">&#39;ready&#39;</span><span class="p">);</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <h4>Internal. Attaches a series of views to a selector.</h4>
+
+<p>Checks to see if a matching selector exists, renders the views,
+performs the proper DOM operation, and then checks if the view is
+attached to the document.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">_attach</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">selector</span><span class="p">,</span> <span class="nx">views</span><span class="p">,</span> <span class="nx">options</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">$selector</span> <span class="o">=</span> <span class="nx">selector</span> <span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">view</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span> <span class="nx">selector</span> <span class="p">)</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">view</span><span class="p">.</span><span class="nx">$el</span><span class="p">,</span>
+        <span class="nx">managers</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p>Check if we found a location to attach the views.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">if</span> <span class="p">(</span> <span class="o">!</span> <span class="nx">$selector</span><span class="p">.</span><span class="nx">length</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="nx">managers</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">chain</span><span class="p">(</span> <span class="nx">views</span> <span class="p">).</span><span class="nx">pluck</span><span class="p">(</span><span class="s1">&#39;views&#39;</span><span class="p">).</span><span class="nx">flatten</span><span class="p">().</span><span class="nx">value</span><span class="p">();</span></pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <p>Render the views if necessary.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span> <span class="nx">managers</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">manager</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="nx">manager</span><span class="p">.</span><span class="nx">rendered</span> <span class="p">)</span>
+          <span class="k">return</span><span class="p">;</span>
+
+        <span class="nx">manager</span><span class="p">.</span><span class="nx">view</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+        <span class="nx">manager</span><span class="p">.</span><span class="nx">rendered</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="p">},</span> <span class="k">this</span> <span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <p>Insert or replace the views.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">this</span><span class="p">[</span> <span class="nx">options</span><span class="p">.</span><span class="nx">add</span> <span class="o">?</span> <span class="s1">&#39;insert&#39;</span> <span class="o">:</span> <span class="s1">&#39;replace&#39;</span> <span class="p">](</span> <span class="nx">$selector</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">pluck</span><span class="p">(</span> <span class="nx">views</span><span class="p">,</span> <span class="s1">&#39;el&#39;</span> <span class="p">),</span> <span class="nx">options</span> <span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <p>Set attached and trigger ready if the current view is already
+attached to the DOM.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span> <span class="nx">managers</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">manager</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="nx">manager</span><span class="p">.</span><span class="nx">attached</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">(</span> <span class="nx">options</span><span class="p">.</span><span class="nx">ready</span> <span class="p">)</span>
+          <span class="nx">manager</span><span class="p">.</span><span class="nx">ready</span><span class="p">();</span>
+      <span class="p">},</span> <span class="k">this</span> <span class="p">);</span>
+
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <h4>Internal. Checks if the current view is in the DOM.</h4>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">_isReady</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">node</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">view</span><span class="p">.</span><span class="nx">el</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span> <span class="nx">node</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="nx">node</span> <span class="o">===</span> <span class="nb">document</span><span class="p">.</span><span class="nx">body</span> <span class="p">)</span>
+          <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="nx">node</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">parentNode</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <h2>Delta.View</h2>
+
+<p>The base view class.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Delta</span><span class="p">.</span><span class="nx">View</span> <span class="o">=</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span></pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <p>The constructor for the <code>Views</code> manager.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">Views</span><span class="o">:</span> <span class="nx">Delta</span><span class="p">.</span><span class="nx">Views</span><span class="p">,</span>
+
+    <span class="nx">constructor</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">views</span> <span class="o">=</span> <span class="k">new</span> <span class="k">this</span><span class="p">.</span><span class="nx">Views</span><span class="p">(</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">views</span> <span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span> <span class="s1">&#39;ready&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">ready</span><span class="p">,</span> <span class="k">this</span> <span class="p">);</span>
+      <span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span> <span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span> <span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="nx">dispose</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <p>Undelegating events, removing events from the model, and
+removing events from the collection mirror the code for
+<code>Backbone.View.dispose</code> in Backbone master.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">this</span><span class="p">.</span><span class="nx">undelegateEvents</span><span class="p">();</span>
+
+      <span class="k">if</span> <span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">model</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">off</span> <span class="p">)</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">off</span><span class="p">(</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="k">this</span> <span class="p">);</span>
+
+      <span class="k">if</span> <span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">collection</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">collection</span><span class="p">.</span><span class="nx">off</span> <span class="p">)</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">collection</span><span class="p">.</span><span class="nx">off</span><span class="p">(</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="k">this</span> <span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-28">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-28">&#182;</a>               </div>               <p>Recursively dispose child views.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">if</span> <span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">views</span> <span class="p">)</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">views</span><span class="p">.</span><span class="nx">dispose</span><span class="p">();</span>
+
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="nx">remove</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">dispose</span><span class="p">();</span>
+      <span class="k">return</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">remove</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span> <span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span> <span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="nx">render</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">options</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">views</span><span class="p">.</span><span class="nx">detach</span><span class="p">();</span>
+
+      <span class="k">if</span> <span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">template</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="nx">options</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">prepare</span> <span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">prepare</span><span class="p">()</span> <span class="o">:</span> <span class="p">{};</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">trigger</span><span class="p">(</span> <span class="s1">&#39;prepare&#39;</span><span class="p">,</span> <span class="nx">options</span> <span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">$el</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">template</span><span class="p">(</span> <span class="nx">options</span> <span class="p">)</span> <span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">views</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="nx">prepare</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">options</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="nx">ready</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{}</span>
+  <span class="p">});</span>
+<span class="p">}());</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

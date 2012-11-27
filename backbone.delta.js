@@ -186,6 +186,8 @@
 				selector = '';
 			}
 
+			views = views || [];
+
 			if ( existing = this.get( selector ) ) {
 				views = _.isArray( views ) ? views : [ views ];
 				this._views[ selector ] = views.length ? _.difference( existing, views ) : [];

@@ -1,7 +1,7 @@
-// Backbone.Delta
-// ==============
-//
-// Simple Backbone.View management.
+// *Simple Backbone.View management.*
+
+// Setup
+// -----
 (function() {
 	var root, $, _, Backbone, Delta;
 
@@ -13,6 +13,9 @@
 	Backbone = root.Backbone;
 
 	Delta = Backbone.Delta = {};
+
+	// Set the current version.
+	Delta.VERSION = '0.1.0';
 
 	// Delta.Views
 	// -------------

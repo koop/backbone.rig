@@ -3,7 +3,7 @@
 // Setup
 // -----
 (function() {
-	var root, $, _, Backbone, Delta;
+	var root, $, _, Backbone, Rig;
 
 	root = this;
 
@@ -12,23 +12,23 @@
 	_ = root._;
 	Backbone = root.Backbone;
 
-	Delta = Backbone.Delta = {};
+	Rig = Backbone.Rig = {};
 
 	// Set the current version.
-	Delta.VERSION = '0.1.0';
+	Rig.VERSION = '0.1.0';
 
-	// Delta.Views
+	// Rig.Views
 	// -------------
 	//
 	// A subview manager.
-	Delta.Views = function( view, views ) {
+	Rig.Views = function( view, views ) {
 		this.view = view;
 		this._views = _.isArray( views ) ? { '': views } : views || {};
 	};
 
-	Delta.Views.extend = Backbone.Model.extend;
+	Rig.Views.extend = Backbone.Model.extend;
 
-	_.extend( Delta.Views.prototype, {
+	_.extend( Rig.Views.prototype, {
 		// ### Fetch all of the subviews
 		//
 		// Returns an array of all subviews.
@@ -129,7 +129,7 @@
 			this._views[ selector ] = next;
 
 			_.each( views, function( subview ) {
-				var constructor = subview.Views || Delta.Views,
+				var constructor = subview.Views || Rig.Views,
 					subviews = subview.views = subview.views || new constructor( subview );
 				subviews.parent   = this.view;
 				subviews.selector = selector;
@@ -343,13 +343,13 @@
 		}
 	});
 
-	// Delta.View
+	// Rig.View
 	// -------------
 	//
 	// The base view class.
-	Delta.View = Backbone.View.extend({
+	Rig.View = Backbone.View.extend({
 		// The constructor for the `Views` manager.
-		Views: Delta.Views,
+		Views: Rig.Views,
 
 		constructor: function() {
 			this.views = new this.Views( this, this.views );

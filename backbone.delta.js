@@ -194,7 +194,7 @@
 			}
 
 			if ( ! options || ! options.silent )
-				_.invoke( views, 'dispose', { silent: true });
+				_.invoke( views, 'dispose' );
 
 			return this;
 		},
@@ -384,10 +384,13 @@
 		render: function() {
 			var options;
 
+			if ( this.prepare )
+				options = this.prepare();
+
 			this.views.detach();
 
 			if ( this.template ) {
-				options = this.prepare ? this.prepare() : {};
+				options = options || {};
 				this.trigger( 'prepare', options );
 				this.$el.html( this.template( options ) );
 			}
